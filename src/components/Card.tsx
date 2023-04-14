@@ -44,7 +44,6 @@ const SwipeableCard: React.FC<SwipeableCardProps> = ({ question, inputFields, on
   return (
     <div {...swipeHandlers}>
       <div
-        css={cardStyle}
         style={{
           transform: `translate(${position.x}px, ${position.y}px)`,
           opacity: isVisible ? 1 : 0,
