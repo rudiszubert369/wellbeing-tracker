@@ -1,32 +1,46 @@
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Card from './components/Card';
+import { saveAnswer, getAnswers } from '../db';
+
+const questionData = [  {    "question": "Did you exercise today?",    "inputFields": [      { "label": "How long did you exercise?", "type": "number" }    ]
+  },
+  {
+    "question": "Did you smoke",
+    "inputFields": [
+      { "label": "How many", "type": "number" }
+    ]
+  }
+];
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [questions, setQuestions] = useState(questionData);
+  const [answers, setAnswers] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function fetchAnswers() {
+      const data = await getAnswers();
+      setAnswers(data);
+    }
+    fetchAnswers();
+  }, []);
+
+  const handleSwipe = async (index: number, answer: any) => {
+    await saveAnswer(answer);
+    setQuestions(prevQuestions => prevQuestions.filter((_, i) => i !== index));
+  };
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="bg-gray-100 p-5 rounded-lg shadow-md">Hello World</div>
-
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div>
+      {questions.map((q, index) => (
+        <Card
+          key={index}
+          question={q.question}
+          inputFields={q.inputFields}
+          onSwipe={() => handleSwipe(index, { date: new Date().toISOString(), question: q.question, answer: q.inputFields })}
+        />
+      ))}
     </div>
-  )
+  );
 }
 
 export default App;

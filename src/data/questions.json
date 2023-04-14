@@ -1,0 +1,14 @@
+[
+  {
+    "question": "Did you exercise today?",
+    "inputFields": [
+      { "label": "How long did you exercise?", "type": "number" }
+    ]
+  },
+  {
+    "question": "Did you smoke",
+    "inputFields": [
+      { "label": "How many", "type": "number" }
+    ]
+  }
+]
