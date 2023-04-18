@@ -1,11 +1,13 @@
 [
   {
+    "id": 1,
     "question": "Did you exercise today?",
     "inputFields": [
       { "label": "How long did you exercise?", "type": "number" }
     ]
   },
   {
+    "id": 2,
     "question": "Did you smoke",
     "inputFields": [
       { "label": "How many", "type": "number" }

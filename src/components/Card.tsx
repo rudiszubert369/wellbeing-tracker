@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useSwipeable } from 'react-swipeable';
-import { css } from '@emotion/react';
 
 interface InputField {
   label: string;
@@ -10,15 +9,8 @@ interface InputField {
 interface SwipeableCardProps {
   question: string;
   inputFields: InputField[];
-  onSwipe: () => void;
+  onSwipe: (swipeDirection: string) => void;
 }
-
-const cardStyle = css`
-  position: absolute;
-  touch-action: none;
-  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-  width: 100%;
-`;
 
 const SwipeableCard: React.FC<SwipeableCardProps> = ({ question, inputFields, onSwipe }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -32,14 +24,14 @@ const SwipeableCard: React.FC<SwipeableCardProps> = ({ question, inputFields, on
       const threshold = 100;
       if (Math.abs(event.deltaX) > threshold) {
         setIsVisible(false);
-        onSwipe();
+        const swipeDirection = event.deltaX > 0 ? 'right' : 'left';
+        onSwipe(swipeDirection);
       } else {
         setPosition({ x: 0, y: 0 });
       }
     },
-    // preventDefaultTouchmoveEvent: true,
     trackMouse: true,
-  });
+  })
 
   return (
     <div {...swipeHandlers}>
@@ -60,8 +52,7 @@ const SwipeableCard: React.FC<SwipeableCardProps> = ({ question, inputFields, on
         ))}
       </div>
     </div>
-  );
-  
+  ); 
 };
 
 export default SwipeableCard;

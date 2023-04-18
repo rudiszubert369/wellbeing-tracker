@@ -18,7 +18,14 @@ export async function saveAnswer(answer: any) {
   await db.put(STORE_NAME, answer);
 }
   
-  export async function getAnswers() {
+export async function getAnswers() {
   const db = await initDb();
   return await db.getAll(STORE_NAME);
+}
+
+export async function clearDatabase() {
+  const db = await initDb();
+  const transaction = db.transaction(STORE_NAME, 'readwrite');
+  const store = transaction.objectStore(STORE_NAME);
+  await store.clear();
 }
