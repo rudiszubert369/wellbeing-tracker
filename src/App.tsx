@@ -1,40 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import Card from './components/Card';
-import questionData from './data/questions.json';
-import { saveAnswer, getAnswers } from './db';
+import React from 'react';
+import { useQuestions } from './hooks/useQuestions';
+import { useCardSwipe } from './hooks/useCardSwipe';
+import { useAnswers } from './hooks/useAnswers';
+import Card from './components/SwipeableCard';
 import ClearDbBtn from './components/ClearDbBtn';
 
 function App() {
-
-  const [questions, setQuestions] = useState(questionData);
-  const [answers, setAnswers] = useState<any[]>([]);
-
-  useEffect(() => {
-    async function fetchAnswers() {
-      const data = await getAnswers();
-      console.log(data)
-      setAnswers(data);
-    }
-    fetchAnswers();
-  }, []);
-
-  const handleSwipe = async (index: number, answer: any, swipeDirection: string) => {
-    await saveAnswer({...answer, swipeDirection});
-    setQuestions(prevQuestions => prevQuestions.filter((_, i) => i !== index));
-  };
+  const { questions } = useQuestions();
+  const { onCardSwipe } = useCardSwipe();
+  const { answers } = useAnswers();
+  
+  console.log(answers);
 
   return (
-    <div>
-      {questions.map((q, index) => (
+    <>
+      {questions.map(({ id, question, inputFields }) => (
         <Card
-          key={q.id}
-          question={q.question}
-          inputFields={q.inputFields}
-          onSwipe={(swipeDirection: string) => handleSwipe(index, { date: new Date().toISOString(), question: q.question, answer: q.inputFields }, swipeDirection)}
+          key={id}
+          question={question}
+          inputFields={inputFields}
+          onSwipe={(swipedRight: boolean, inputAnswer: string) => onCardSwipe(id, swipedRight, inputAnswer)}
         />
       ))}
       <ClearDbBtn />
-    </div>
+    </>
   );
 }
 
