@@ -1,8 +1,6 @@
 import { useSwipeable } from 'react-swipeable';
 import { useState } from 'react';
 
-// type SwipeHandlers = ReturnType<typeof useSwipeHandlers>;
-
 const useSwipeHandlers = (onSwipe: (swipedRight: boolean, inputAnswer: string) => void) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(true);
@@ -30,7 +28,7 @@ const useSwipeHandlers = (onSwipe: (swipedRight: boolean, inputAnswer: string) =
     trackMouse: true,
   });
 
-  return { position, isVisible, inputValue, handleInputChange, ...swipeHandlers };
+  return { swipeableProps: { position, isVisible, inputValue, handleInputChange } , swipeHandlers: { ...swipeHandlers } };
 };
 
 export default useSwipeHandlers;

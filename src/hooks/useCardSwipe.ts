@@ -1,16 +1,25 @@
+import { useState } from 'react';
+import questionData from '../data/questions.json';
 import { useAnswers } from './useAnswers';
 import { useQuestions } from './useQuestions';
-import questionData from '../data/questions.json';
+
+type OnCardSwipe = (
+  id: number,
+  swipedRight: boolean,
+  inputAnswer: string,
+  visibleCardIndex: number,
+  setVisibleCardIndex: (index: number) => void
+) => void;
 
 interface CardSwipe {
-  onCardSwipe: (id: number, swipedRight: boolean, inputAnswer: string) => void;
+  onCardSwipe: OnCardSwipe;
 }
 
 export function useCardSwipe(): CardSwipe {
   const { saveAnswerAndAddToList } = useAnswers();
   const { removeQuestion } = useQuestions();
 
-  const onCardSwipe = async (id: number, swipedRight: boolean, inputAnswer: string) => {
+  const onCardSwipe: OnCardSwipe = async (id, swipedRight, inputAnswer, visibleCardIndex, setVisibleCardIndex) => {
     const answerData = {
       date: new Date().toISOString(),
       question: questionData.find(q => q.id === id)?.question || "",
@@ -19,6 +28,7 @@ export function useCardSwipe(): CardSwipe {
     };
     await saveAnswerAndAddToList(answerData);
     removeQuestion(id);
+    setVisibleCardIndex(visibleCardIndex + 1);
   };
 
   return {

@@ -9,17 +9,22 @@ interface SwipeableCardProps {
   question: string;
   inputFields: InputField[];
   onSwipe: (swipedRight: boolean, inputAnswer: string) => void;
+  isCurrentCard: boolean;
 }
 
-const SwipeableCard: React.FC<SwipeableCardProps> = ({ question, inputFields, onSwipe }) => {
-  const swipeHandlers = useSwipeHandlers(onSwipe);
+const SwipeableCard: React.FC<SwipeableCardProps> = ({ question, inputFields, onSwipe, isCurrentCard }) => {
+  const { swipeableProps, swipeHandlers } = useSwipeHandlers(onSwipe);
+
+  if (!isCurrentCard) {
+    return null;
+  }
 
   return (
     <div {...swipeHandlers}>
       <div
         style={{
-          transform: `translate(${swipeHandlers.position.x}px, ${swipeHandlers.position.y}px)`,
-          opacity: swipeHandlers.isVisible ? 1 : 0,
+          transform: `translate(${swipeableProps.position.x}px, ${swipeableProps.position.y}px)`,
+          opacity: swipeableProps.isVisible ? 1 : 0,
         }}
       >
         <h2>{question}</h2>
@@ -29,8 +34,8 @@ const SwipeableCard: React.FC<SwipeableCardProps> = ({ question, inputFields, on
               {field.label}
               <input
                 type={field.type}
-                value={swipeHandlers.inputValue}
-                onChange={swipeHandlers.handleInputChange}
+                value={swipeableProps.inputValue}
+                onChange={swipeableProps.handleInputChange}
               />
             </label>
           </div>

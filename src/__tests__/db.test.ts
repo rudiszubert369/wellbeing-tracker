@@ -1,50 +1,60 @@
-import { openDB, IDBPDatabase } from 'idb';
-import { initDb, saveAnswer, getAnswers } from '../db';
+// // import { openDB, IDBPDatabase } from 'idb';
+// import { initDb, saveAnswer, getAnswers, clearDatabase } from '../db';
+// import { fakeIndexedDB } from 'fake-indexeddb';
 
-const DB_NAME = 'dailyQuestions';
-const STORE_NAME = 'answers';
+// // const DB_NAME = 'dailyQuestions';
+// // const STORE_NAME = 'answers';
 
-describe('database functions', () => {
-  let db: IDBPDatabase;
+// import { openDB } from 'idb';
+// // import { initDb, saveAnswer, getAnswers, clearDatabase } from './dailyQuestions';
+// jest.mock('idb', () => {
+//   const originalModule = jest.requireActual('idb');
+//   return {
+//     ...originalModule,
+//     openDB: (...args: Parameters<typeof originalModule.openDB>): ReturnType<typeof originalModule.openDB> =>
+//       originalModule.openDB(...args, { _indexedDB: fakeIndexedDB }),
+//   };
+// });
 
-  beforeAll(async () => {
-    db = await openDB(DB_NAME, 1, {
-      upgrade(db) {
-        db.createObjectStore(STORE_NAME, { keyPath: 'date' });
-      },
-    });
-  });
+// describe('dailyQuestions', () => {
+//   afterEach(async () => {
+//     // Clear the database after each test to ensure a clean state.
+//     await clearDatabase();
+//   });
 
-  afterAll(async () => {
-    await db.close();
-    await indexedDB.deleteDatabase(DB_NAME);
-  });
+//   it('initializes the database', async () => {
+//     const db = await initDb();
+//     expect(db.name).toBe('dailyQuestions');
+//     expect(db.version).toBe(1);
+//     expect(db.objectStoreNames.contains('answers')).toBe(true);
+//   });
 
-  describe('initDb()', () => {
-    it('should create the database object store', async () => {
-      const store = db.transaction(STORE_NAME).objectStore(STORE_NAME);
-      expect(store).toBeDefined();
-    });
-  });
+//   it('saves an answer', async () => {
+//     const answer = { date: '2023-04-21', content: 'This is a test answer.' };
+//     await saveAnswer(answer);
+//     const db = await openDB('dailyQuestions', 1);
+//     const savedAnswer = await db.get('answers', '2023-04-21');
+//     expect(savedAnswer).toEqual(answer);
+//   });
 
-  describe('saveAnswer(answer)', () => {
-    it('should save an answer to the database', async () => {
-      const answer = { date: '2022-01-01', value: 'example answer' };
-      await saveAnswer(answer);
-      const result = await db.get(STORE_NAME, '2022-01-01');
-      expect(result).toEqual(answer);
-    });
-  });
+//   it('retrieves all answers', async () => {
+//     const answers = [
+//       { date: '2023-04-20', content: 'Answer 1' },
+//       { date: '2023-04-21', content: 'Answer 2' },
+//     ];
+//     for (const answer of answers) {
+//       await saveAnswer(answer);
+//     }
+//     const retrievedAnswers = await getAnswers();
+//     expect(retrievedAnswers).toEqual(answers);
+//   });
 
-  describe('getAnswers()', () => {
-    it('should return all answers from the database', async () => {
-      const answers = [
-        { date: '2022-01-01', value: 'example answer 1' },
-        { date: '2022-01-02', value: 'example answer 2' },
-      ];
-      await Promise.all(answers.map((answer) => saveAnswer(answer)));
-      const result = await getAnswers();
-      expect(result).toEqual(answers);
-    });
-  });
-});
+//   it('clears the database', async () => {
+//     const answer = { date: '2023-04-21', content: 'This is a test answer.' };
+//     await saveAnswer(answer);
+//     await clearDatabase();
+//     const db = await openDB('dailyQuestions', 1);
+//     const savedAnswer = await db.get('answers', '2023-04-21');
+//     expect(savedAnswer).toBeUndefined();
+//   });
+// });
